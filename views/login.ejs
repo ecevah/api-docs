@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Docs - Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+            background: #f0f0f0;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-window {
+            background: #ffffff;
+            border-radius: 10px;
+            width: 480px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Window Controls */
+        .window-controls {
+            height: 52px;
+            background: #f6f6f6;
+            border-bottom: 1px solid #d1d1d1;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 8px;
+        }
+
+        .traffic-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 0.5px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .traffic-light.close { background: #ff5f57; }
+        .traffic-light.minimize { background: #ffbd2e; }
+        .traffic-light.maximize { background: #28ca42; }
+
+        .title-separator {
+            width: 1px;
+            height: 16px;
+            background: #d1d1d1;
+            margin: 0 16px;
+        }
+
+        .window-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            letter-spacing: -0.08px;
+        }
+
+        /* Login Content */
+        .login-content {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .logo-section {
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+            color: white;
+        }
+
+        .logo-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .logo-subtitle {
+            font-size: 15px;
+            color: #8e8e93;
+            font-weight: 400;
+        }
+
+        .login-form {
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d1d1;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            outline: none;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px 24px;
+            background: #007aff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-top: 8px;
+            font-family: inherit;
+        }
+
+        .login-btn:hover {
+            background: #0056cc;
+        }
+
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+
+        .error-message {
+            background: #ff3b30;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+            border: none;
+        }
+
+        .demo-section {
+            background: #f8f9fa;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .demo-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .demo-users {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .demo-user {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            transition: all 0.15s ease;
+            cursor: pointer;
+        }
+
+        .demo-user:hover {
+            background: #f0f0f0;
+            border-color: #d1d1d1;
+        }
+
+        .demo-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .demo-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #007aff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .demo-user-details {
+            text-align: left;
+        }
+
+        .demo-user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            line-height: 1.2;
+        }
+
+        .demo-user-username {
+            font-size: 12px;
+            color: #8e8e93;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        .demo-user-role {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .demo-user-role.admin {
+            background: #ff3b30;
+            color: white;
+        }
+
+        .demo-user-role.user {
+            background: #34c759;
+            color: white;
+        }
+
+        .demo-note {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #8e8e93;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 520px) {
+            .login-window {
+                width: 90vw;
+                margin: 20px;
+            }
+            
+            .login-content {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-window">
+        <!-- Window Controls -->
+        <div class="window-controls">
+            <div class="traffic-lights">
+                <div class="traffic-light close"></div>
+                <div class="traffic-light minimize"></div>
+                <div class="traffic-light maximize"></div>
+            </div>
+            <div class="title-separator"></div>
+            <div class="window-title">API Documentation - Login</div>
+        </div>
+
+        <!-- Login Content -->
+        <div class="login-content">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo-icon">📚</div>
+                <div class="logo-title">API Documentation</div>
+                <div class="logo-subtitle">Secure access to API documentation</div>
+            </div>
+
+            <!-- Error Message -->
+            <% if (error) { %>
+                <div class="error-message">
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <!-- Login Form -->
+            <form method="POST" action="/login" class="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" name="username" class="form-input" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="login-btn">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function fillCredentials(username, password) {
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = password;
+            
+            // Add visual feedback
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            
+            usernameInput.style.borderColor = '#34c759';
+            passwordInput.style.borderColor = '#34c759';
+            
+            setTimeout(() => {
+                usernameInput.style.borderColor = '#d1d1d1';
+                passwordInput.style.borderColor = '#d1d1d1';
+            }, 1000);
+        }
+
+        // Auto-focus username field
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('username').focus();
+        });
+
+        // Handle form submission with loading state
+        document.querySelector('.login-form').addEventListener('submit', function(e) {
+            const submitBtn = document.querySelector('.login-btn');
+            submitBtn.textContent = 'Signing in...';
+            submitBtn.disabled = true;
+        });
+    </script>
+</body>
+</html> 

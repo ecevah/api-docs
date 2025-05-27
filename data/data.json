@@ -1,0 +1,41 @@
+[
+    {
+        "id": "1",
+        "method": "POST",
+        "endpoint": "/api/users/login",
+        "description": "Kullanıcının e-posta ve şifre ile giriş yapmasını sağlar.",
+        "roles": ["guest", "user"],
+        "group": "User",
+        "query": {
+            "redirect": "Girişten sonra yönlendirilecek opsiyonel URL"
+        },
+        "params": {
+            "userId": "Kullanıcının benzersiz kimliği (URL parametresi)"
+        },
+        "body": {
+            "email": "string (zorunlu) - Kullanıcının e-posta adresi",
+            "password": "string (zorunlu) - Kullanıcının şifresi"
+        },
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer token (gerekli olabilir)"
+        },
+        "response": {
+            "status": 200,
+            "data": {
+            "token": "string - JWT token",
+            "user": 
+                {
+                    "id": "string",
+                    "name": "string",
+                    "email": "string"
+                }
+            },
+            "errors": {
+                "status": 401,
+                "message": "Geçersiz giriş bilgileri"
+            }
+        },
+        "cURL": "curl -X POST https://api.example.com/api/users/login -H 'Content-Type: application/json' -d '{\"email\":\"example@mail.com\",\"password\":\"123456\"}'"
+    }      
+]

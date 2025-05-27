@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - API Documentation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+            background: #f0f0f0;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-window {
+            background: #ffffff;
+            border-radius: 10px;
+            width: 600px;
+            max-width: 90vw;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Window Controls */
+        .window-controls {
+            height: 52px;
+            background: #f6f6f6;
+            border-bottom: 1px solid #d1d1d1;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 8px;
+        }
+
+        .traffic-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 0.5px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .traffic-light.close { background: #ff5f57; }
+        .traffic-light.minimize { background: #ffbd2e; }
+        .traffic-light.maximize { background: #28ca42; }
+
+        .title-separator {
+            width: 1px;
+            height: 16px;
+            background: #d1d1d1;
+            margin: 0 16px;
+        }
+
+        .window-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            letter-spacing: -0.08px;
+        }
+
+        /* Error Content */
+        .error-content {
+            padding: 40px;
+            text-align: center;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ff3b30 0%, #ff9500 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            font-size: 36px;
+            color: white;
+        }
+
+        .error-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .error-message {
+            font-size: 16px;
+            color: #8e8e93;
+            margin-bottom: 32px;
+            line-height: 1.4;
+            max-width: 400px;
+        }
+
+        .error-details {
+            background: #f8f9fa;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            text-align: left;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .error-details-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+        }
+
+        .error-status {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 14px;
+            color: #ff3b30;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .error-stack {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 12px;
+            color: #666;
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e5e5e5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #007aff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056cc;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #d1d1d1;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .error-window {
+                margin: 0;
+                height: 100vh;
+                border-radius: 0;
+                width: 100vw;
+            }
+
+            .window-controls {
+                padding: 0 16px;
+            }
+
+            .window-title {
+                display: none;
+            }
+
+            .title-separator {
+                display: none;
+            }
+
+            .error-content {
+                padding: 24px 20px;
+                min-height: calc(100vh - 52px);
+            }
+
+            .error-icon {
+                width: 64px;
+                height: 64px;
+                font-size: 28px;
+                margin-bottom: 20px;
+            }
+
+            .error-title {
+                font-size: 24px;
+            }
+
+            .error-message {
+                font-size: 15px;
+                margin-bottom: 24px;
+            }
+
+            .error-details {
+                padding: 16px;
+                margin-bottom: 24px;
+            }
+
+            .error-stack {
+                font-size: 11px;
+                padding: 12px;
+                max-height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .window-controls {
+                padding: 0 12px;
+            }
+
+            .error-content {
+                padding: 20px 16px;
+            }
+
+            .error-icon {
+                width: 56px;
+                height: 56px;
+                font-size: 24px;
+                margin-bottom: 16px;
+            }
+
+            .error-title {
+                font-size: 20px;
+            }
+
+            .error-message {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+
+            .error-details {
+                padding: 12px;
+                margin-bottom: 20px;
+            }
+
+            .error-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .error-stack {
+                font-size: 10px;
+                padding: 10px;
+                max-height: 120px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .error-content {
+                padding: 16px 12px;
+            }
+
+            .error-title {
+                font-size: 18px;
+            }
+
+            .error-message {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-window">
+        <!-- Window Controls -->
+        <div class="window-controls">
+            <div class="traffic-lights">
+                <div class="traffic-light close"></div>
+                <div class="traffic-light minimize"></div>
+                <div class="traffic-light maximize"></div>
+            </div>
+            <div class="title-separator"></div>
+            <div class="window-title">API Documentation - Error</div>
+        </div>
+
+        <!-- Error Content -->
+        <div class="error-content">
+            <div class="error-icon">⚠️</div>
+            <div class="error-title">Oops! Something went wrong</div>
+            <div class="error-message">
+                <%= message || 'An unexpected error occurred while processing your request.' %>
+            </div>
+
+            <% if (error && error.status) { %>
+                <div class="error-details">
+                    <div class="error-details-title">Error Details</div>
+                    <div class="error-status">Status: <%= error.status %></div>
+                    <% if (error.stack) { %>
+                        <div class="error-stack"><%= error.stack %></div>
+                    <% } %>
+                </div>
+            <% } %>
+
+            <div class="error-actions">
+                <a href="/" class="btn btn-primary">
+                    🏠 Go Home
+                </a>
+                <button onclick="history.back()" class="btn btn-secondary">
+                    ← Go Back
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-focus on page load for better accessibility
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add some interactivity to traffic lights (just for fun)
+            const trafficLights = document.querySelectorAll('.traffic-light');
+            trafficLights.forEach(light => {
+                light.addEventListener('click', function() {
+                    if (this.classList.contains('close')) {
+                        window.close();
+                    } else if (this.classList.contains('minimize')) {
+                        // Minimize effect (just visual)
+                        document.body.style.transform = 'scale(0.1)';
+                        setTimeout(() => {
+                            document.body.style.transform = 'scale(1)';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                history.back();
+            } else if (e.key === 'Enter' || e.key === ' ') {
+                window.location.href = '/';
+            }
+        });
+    </script>
+</body>
+</html>
